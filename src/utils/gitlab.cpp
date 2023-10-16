@@ -1,4 +1,4 @@
-                  #include "gitlab.hpp"
+#include "gitlab.hpp"
 
 GlJob Parse(const formats::json::Value& json, formats::parse::To<GlJob>) {
   return GlJob{json["id"].As<uint32_t>(0), json["name"].As<std::string>(""), json["status"].As<std::string>(""),

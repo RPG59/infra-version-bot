@@ -1,6 +1,7 @@
 #include "infra_version_handler.hpp"
 
-InfraVersionHandler::InfraVersionHandler(const components::ComponentConfig& config, const components::ComponentContext& context)
+InfraVersionHandler::InfraVersionHandler(const components::ComponentConfig& config,
+                                         const components::ComponentContext& context)
     : server::handlers::HttpHandlerJsonBase(config, context),
       http_client(context.FindComponent<components::HttpClient>().GetHttpClient()) {
   auto glToken = std::getenv("GL_TOKEN");
@@ -20,12 +21,12 @@ InfraVersionHandler::InfraVersionHandler(const components::ComponentConfig& conf
 InfraVersionHandler::~InfraVersionHandler() { delete gitlab; }
 
 formats::json::Value InfraVersionHandler::HandleRequestJsonThrow(const server::http::HttpRequest&,
-                                                    const formats::json::Value& request,
-                                                    server::request::RequestContext&) const {
+                                                                 const formats::json::Value& request,
+                                                                 server::request::RequestContext&) const {
   auto jobId = request["jobId"].As<uint32_t>(0);
   auto projectName = request["projectName"].As<std::string>("");
 
-  if (jobId == 0|| projectName.empty()) {
+  if (jobId == 0 || projectName.empty()) {
     throw server::handlers::ExceptionWithCode<server::handlers::HandlerErrorCode::kClientError>();
   }
 
