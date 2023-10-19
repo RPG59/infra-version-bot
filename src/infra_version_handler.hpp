@@ -19,7 +19,7 @@ class InfraVersionHandler final : public server::handlers::HttpHandlerJsonBase {
 
  public:
   uint32_t infraProjectId = 25854;
-  clients::http::Client& http_client;
+  clients::http::Client& httpClient;
 
   using KeyValues = std::unordered_map<std::string, formats::json::Value>;
   static constexpr std::string_view kName = "handler-infra-version";

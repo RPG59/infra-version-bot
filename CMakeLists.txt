@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.12)
 project(service_template CXX)
 set(CMAKE_CXX_STANDARD 17)
+set(USERVER_FEATURE_REDIS_HI_MALLOC 0)
+set(USERVER_FEATURE_CLICKHOUSE 0)
+set(USERVER_FEATURE_RABBITMQ 0)
+set(USERVER_FEATURE_POSTGRESQL 0)
 
 
 include(third_party/userver/cmake/SetupEnvironment.cmake)

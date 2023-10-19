@@ -3,7 +3,7 @@
 InfraVersionHandler::InfraVersionHandler(const components::ComponentConfig& config,
                                          const components::ComponentContext& context)
     : server::handlers::HttpHandlerJsonBase(config, context),
-      http_client(context.FindComponent<components::HttpClient>().GetHttpClient()) {
+      httpClient(context.FindComponent<components::HttpClient>().GetHttpClient()) {
   auto glToken = std::getenv("GL_TOKEN");
   auto glOrigin = std::getenv("GL_ORIGIN");
 
@@ -25,20 +25,21 @@ formats::json::Value InfraVersionHandler::HandleRequestJsonThrow(const server::h
                                                                  server::request::RequestContext&) const {
   auto jobId = request["jobId"].As<uint32_t>(0);
   auto projectName = request["projectName"].As<std::string>("");
+  auto projectNamespace = request["projectNamespace"].As<std::string>("");
 
-  if (jobId == 0 || projectName.empty()) {
+  if (jobId == 0 || projectName.empty() || projectNamespace.empty()) {
     throw server::handlers::ExceptionWithCode<server::handlers::HandlerErrorCode::kClientError>();
   }
 
   std::string infraMasterBranchName = "master";
   auto masterInfraVersionTask =
       utils::Async("masterInfraVersionTask", [this, &infraMasterBranchName = infraMasterBranchName] {
-        return gitlab->getInfraVersion(infraProjectId, infraMasterBranchName, http_client);
+        return gitlab->getInfraVersion(infraProjectId, infraMasterBranchName, httpClient);
       });
 
   auto currentInfraVersionTask =
-      utils::Async("currentInfraVersionTask", [this, jobId = jobId, &projectName = projectName] {
-        return gitlab->getInfraVersionByJob(jobId, projectName, http_client);
+      utils::Async("currentInfraVersionTask", [this, jobId = jobId, &projectName = projectName, &projectNamespace = projectNamespace] {
+        return gitlab->getInfraVersionByJob(jobId, projectName, projectNamespace, httpClient);
       });
 
   engine::WaitAllChecked(masterInfraVersionTask);

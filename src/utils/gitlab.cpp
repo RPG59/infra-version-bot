@@ -19,8 +19,9 @@ GlProject Parse(const formats::json::Value& json, formats::parse::To<GlProject>)
 
 Gitlab::Gitlab(std::string origin, std::string token) : origin(origin), token(token) {}
 
-GlProject Gitlab::getProject(std::string& projectName, clients::http::Client& httpClient) {
-  auto url = fmt::format("{}/api/v4/projects/sberdevices-frontend%2F{}", origin, projectName);
+GlProject Gitlab::getProject(std::string& projectName, std::string& projectNamespace,
+                             clients::http::Client& httpClient) {
+  auto url = fmt::format("{}/api/v4/projects/{}%2F{}", origin, projectNamespace, projectName);
 
   return makeApiRequest(url, httpClient).As<GlProject>();
 }
@@ -68,8 +69,9 @@ formats::json::Value Gitlab::makeApiRequest(std::string& url, clients::http::Cli
 }
 
 std::optional<std::string> Gitlab::getInfraVersionByJob(uint32_t jobId, std::string& projectName,
+                                                        std::string& projectNamespace,
                                                         clients::http::Client& httpClient) {
-  auto currentProject = getProject(projectName, httpClient);
+  auto currentProject = getProject(projectName, projectNamespace, httpClient);
   auto currentJob = getJob(currentProject.id, jobId, httpClient);
 
   return getInfraVersion(currentProject.id, currentJob.commitId, httpClient);

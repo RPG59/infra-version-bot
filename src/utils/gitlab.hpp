@@ -28,11 +28,11 @@ class Gitlab {
 
  public:
   Gitlab(std::string origin, std::string token);
-  GlProject getProject(std::string& projectName, clients::http::Client& httpClient);
+  GlProject getProject(std::string& projectName, std::string& projectNamespace, clients::http::Client& httpClient);
   GlJob getJob(uint32_t projectId, uint32_t jobId, clients::http::Client& httpClient);
   std::optional<std::string> getInfraVersion(uint32_t projectId, std::string& ref, clients::http::Client& httpClient);
   std::optional<std::string> getInfraVersionByJob(uint32_t jobId, std::string& projectName,
-                                                  clients::http::Client& httpClient);
+                                                  std::string& projectNamespace, clients::http::Client& httpClient);
 
  private:
   formats::json::Value makeApiRequest(std::string& url, clients::http::Client& httpClient);

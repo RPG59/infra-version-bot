@@ -1,20 +1,20 @@
 components_manager:
     coro_pool:
-        initial_size: 50
-        max_size: 100
- 
+        initial_size: 25
+        max_size: 50
+
     task_processors:                  # Task processor is an executor for coroutine tasks
- 
+
         main-task-processor:          # Make a task processor for CPU-bound couroutine tasks.
-            worker_threads: 2
+            worker_threads: 1
             thread_name: main-worker  # OS will show the threads of this task processor with 'main-worker' prefix.
- 
+
         fs-task-processor:            # Make a separate task processor for filesystem bound tasks.
             thread_name: fs-worker
-            worker_threads: 2
- 
+            worker_threads: 1
+
     default_task_processor: main-task-processor
- 
+
     components:                       # Configuring components that were registered via component_list
         http-client:
             load-enabled: $is_testing
@@ -36,13 +36,13 @@ components_manager:
 
         tracer:
             service-name: service_template
- 
+
         dynamic-config:                      # Dynamic config storage options, do nothing
             fs-cache-path: ''
 
         dynamic-config-fallbacks:            # Load options from file and push them into the dynamic config storage.
             fallback-path: /app/dynamic_config.json
- 
+
         handler-ping:
             path: /ping
             method: GET
